@@ -13,6 +13,7 @@
 		"react": "16.0.0-beta.5",
 		"react-native": "0.49.3",
 		"react-native-geolocation-service": "^1.0.3",
+		"react-native-view-shot": "^2.3.0",
 		"react-viro": "2.5.1"
 	},
 	"devDependencies": {

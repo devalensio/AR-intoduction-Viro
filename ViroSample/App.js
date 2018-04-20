@@ -15,9 +15,14 @@ import {
   StyleSheet,
   PixelRatio,
   TouchableHighlight,
-  Button
+  Button,
+  Image,
+  Alert
 } from 'react-native';
+
 import Geolocation from 'react-native-geolocation-service'
+
+import { captureScreen } from "react-native-view-shot";
 
 import projector from 'ecef-projector'
 
@@ -52,12 +57,17 @@ export default class ViroSample extends Component {
     this.state = {
       navigatorType : defaultNavigatorType,
       sharedProps : sharedProps,
+      screenShotData: {},
+      error: null,
+      uriTest: null
     }
     this._getExperienceSelector = this._getExperienceSelector.bind(this);
     this._getARNavigator = this._getARNavigator.bind(this);
     this._getVRNavigator = this._getVRNavigator.bind(this);
     this._getExperienceButtonOnPress = this._getExperienceButtonOnPress.bind(this);
     this._exitViro = this._exitViro.bind(this);
+    this._screenShot = this._screenShot.bind(this)
+    this._actionlist = this._actionlist.bind(this)
   }
 
   // Replace this function with the contents of _getVRNavigator() or _getARNavigator()
@@ -110,11 +120,50 @@ export default class ViroSample extends Component {
     );
   }
 
+  _actionlist () {
+    Alert.alert(
+    'Choose an object',
+    'Select an object to place in the world!',
+    );
+  }
+
+  _screenShot () {
+    captureScreen({
+      format: "jpg",
+      quality: 0.8
+    })
+    .then(
+      uri => this.setState({ uriTest : uri }),
+      error => console.error("Oops, Something Went Wrong", error)
+    );
+  }
+
   // Returns the ViroARSceneNavigator which will start the AR experience
   _getARNavigator() {
     return (
-      <ViroARSceneNavigator {...this.state.sharedProps}
-        initialScene={{scene: InitialARScene}} />
+      <View collapsable={false} style={{flex: 1}}>
+        {
+          this.state.uriTest &&
+          <Text>{ this.state.uriTest }</Text>
+        }
+        <ViroARSceneNavigator {...this.state.sharedProps}
+          initialScene={{scene: InitialARScene}} />
+        <View style={{position: 'absolute',  left: 0, right: 0, bottom: 77, alignItems: 'center'}}>
+          <TouchableHighlight style={localStyles.arButton}
+            onPress={ this._screenShot }
+            underlayColor={'#00000000'} >
+            <Image source={require("./js/res/btn_mode_objects.png")} />
+          </TouchableHighlight>
+        </View>
+        <View style={{position: 'absolute',  left: 0, right: 0, bottom: 100, alignItems: 'center'}}>
+          <TouchableHighlight style={localStyles.arButton}
+            onPress={ this._actionlist }
+            underlayColor={'#ffffff00'} >
+            <Image source={require("./js/res/btn_mode_objects.png")} />
+          </TouchableHighlight>
+        </View>
+      </View>
+
     );
   }
 
@@ -184,6 +233,18 @@ var localStyles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#fff',
+  },
+  arButton : {
+    height: 80,
+    width: 80,
+    paddingTop:20,
+    paddingBottom:20,
+    marginTop: 10,
+    marginBottom: 10,
+    backgroundColor:'#00000000',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ffffff00',
   },
   exitButton : {
     height: 50,
