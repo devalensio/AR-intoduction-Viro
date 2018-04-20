@@ -124,6 +124,10 @@ export default class ViroSample extends Component {
     Alert.alert(
     'Choose an object',
     'Select an object to place in the world!',
+    [
+      {text: 'Direction'},
+      {text: 'Picture'},
+    ],
     );
   }
 
@@ -149,13 +153,6 @@ export default class ViroSample extends Component {
         <ViroARSceneNavigator {...this.state.sharedProps}
           initialScene={{scene: InitialARScene}} />
         <View style={{position: 'absolute',  left: 0, right: 0, bottom: 77, alignItems: 'center'}}>
-          <TouchableHighlight style={localStyles.arButton}
-            onPress={ this._screenShot }
-            underlayColor={'#00000000'} >
-            <Image source={require("./js/res/btn_mode_objects.png")} />
-          </TouchableHighlight>
-        </View>
-        <View style={{position: 'absolute',  left: 0, right: 0, bottom: 100, alignItems: 'center'}}>
           <TouchableHighlight style={localStyles.arButton}
             onPress={ this._actionlist }
             underlayColor={'#ffffff00'} >
